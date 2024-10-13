@@ -10,15 +10,13 @@
     <div id="map"></div>
 
     <style>
-      #map { height: 800px; }
+      #map { height: 700px; width: 1000px; }
     </style>
 
+    <script src="boundary-canvas.js"></script>
+
     <script>
-      var map = L.map('map').setView([10.8505, 76.2711], 7);
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
+      let map;
 
       const colors = {
         "Kasaragod": "#ffefac",
@@ -40,7 +38,16 @@
       fetch("kerala.geojson")
         .then(response => response.json())
         .then(json => {
-          L.geoJSON(json, {
+          map = L.map('map', {zoomSnap: 0.1}).setView([10.8505, 76.2711], 10);
+          
+          var osm = new L.TileLayer.BoundaryCanvas("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            boundary: json,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap/Wikidata Contributors</a>'
+          });
+          map.addLayer(osm)
+
+          const layer = L.geoJSON(json, {
             style: function(feature) {
               return {
                 fillColor: colors[feature.properties.name],
@@ -52,15 +59,23 @@
             pointToLayer: function (feature, latlng) {
               return;
             }
-          }).addTo(map);
+          });
+
+          map.addLayer(layer)
+          map.fitBounds(layer.getBounds());
+
+          drawPoints();
         })
 
-      fetch("data.json")
-        .then(response => response.json())
-        .then(data => data.forEach((item) => {
-          marker = L.circle([item[1], item[2]], {weight: 1, color: "#000", fillColor: "purple", radius: 1000, fillOpacity: 1}).addTo(map)
-          marker.bindPopup(item[0], {autoClose: true}).openPopup();
-        }))
+        const drawPoints = () => {
+          fetch("data.json")
+            .then(response => response.json())
+            .then(data => data.forEach((item) => {
+              marker = L.circle([item[1], item[2]], {weight: 1, color: "red", fillColor: "red", radius: 10, fillOpacity: 1}).addTo(map)
+              // marker = L.circle([item[1], item[2]], {weight: 6, color: "red", fillColor: "red", radius: 1000, fillOpacity: 1}).addTo(map)
+              marker.bindPopup(item[0], {autoClose: false}).openPopup();
+            }))
+        }
     </script>
   </body>
 </html> 
