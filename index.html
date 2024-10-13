@@ -1,0 +1,56 @@
+<html>
+  <body>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+    <div id="map"></div>
+
+    <style>
+      #map { height: 800px; }
+    </style>
+
+    <script>
+      var map = L.map('map').setView([10.8505, 76.2711], 7);
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      fetch("kerala.json")
+        .then(response => response.json())
+        .then(json => {
+          const keralaGeoJSON = {
+            "type": "Feature",
+            "geometry": {
+              "type": "Polygon",
+              "coordinates": json
+            },
+            "properties": {
+              "name": "Kerala"
+            }
+          };
+
+          // Add Kerala boundary to the map with a border style
+          L.geoJSON(keralaGeoJSON, {
+            style: {
+              color: 'red',
+              weight: 2,
+              opacity: 0.1,
+              fillOpacity: 0.2
+            }
+          }).addTo(map);
+        })
+
+      fetch("data.json")
+        .then(response => response.json())
+        .then(data => data.forEach((item) => {
+          marker = L.marker([item[1], item[2]]).addTo(map)
+          marker.bindPopup(item[0], {autoClose: true}).openPopup();
+        }))
+    </script>
+  </body>
+</html> 

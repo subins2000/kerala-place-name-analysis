@@ -84,4 +84,7 @@ if @first_run
   Place.insert_all(@records)
 end
 
+data = Place.where("name LIKE '%mugal%' OR name LIKE '%mukal%' OR name LIKE '%മുഗൾ%'").pluck(:name, :lat, :lon).to_json
+File.write("data.json", data)
+
 binding.pry
