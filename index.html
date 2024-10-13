@@ -20,27 +20,37 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
 
-      fetch("kerala.json")
+      const colors = {
+        "Kasaragod": "#ffefac",
+        "Kannur": "#ffefac",
+        "Kozhikode": "#ffefac",
+        "Wayanad": "#ffefac",
+        "Malappuram": "#ffacac",
+        "Palakkad": "#ffacac",
+        "Thrissur": "#ffacac",
+        "Ernakulam": "#ffacac",
+        "Idukki": "#abefff",
+        "Alappuzha": "#abefff",
+        "Kottayam": "#abefff",
+        "Pathanamthitta": "#abefff",
+        "Kollam": "#abefff",
+        "Thiruvananthapuram": "#abefff"
+      }
+
+      fetch("kerala.geojson")
         .then(response => response.json())
         .then(json => {
-          const keralaGeoJSON = {
-            "type": "Feature",
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": json
+          L.geoJSON(json, {
+            style: function(feature) {
+              return {
+                fillColor: colors[feature.properties.name],
+                fillOpacity: 0.5,
+                color: "#000",
+                weight: 0.2,
+              }
             },
-            "properties": {
-              "name": "Kerala"
-            }
-          };
-
-          // Add Kerala boundary to the map with a border style
-          L.geoJSON(keralaGeoJSON, {
-            style: {
-              color: 'red',
-              weight: 2,
-              opacity: 0.1,
-              fillOpacity: 0.2
+            pointToLayer: function (feature, latlng) {
+              return;
             }
           }).addTo(map);
         })
@@ -48,7 +58,7 @@
       fetch("data.json")
         .then(response => response.json())
         .then(data => data.forEach((item) => {
-          marker = L.marker([item[1], item[2]]).addTo(map)
+          marker = L.circle([item[1], item[2]], {weight: 1, color: "#000", fillColor: "purple", radius: 1000, fillOpacity: 1}).addTo(map)
           marker.bindPopup(item[0], {autoClose: true}).openPopup();
         }))
     </script>
