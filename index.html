@@ -11,23 +11,28 @@
     <div id="container" class="relative">
       <div id="title">
         <h1 class="text-2xl pt-4">Places ending with word</h1>
-        <div class="border border-black px-4 py-2 my-4 text-2xl">"ശ്ശേരി"</div>
+        <div class="border border-black px-4 py-2 my-4 text-2xl">മുഗൾ / mugal</div>
         <h2 class="text-2xl">എന്ന വാക്കിൽ അവസാനിക്കുന്ന സ്ഥലങ്ങൾ</h2>
+        <ul id="example" class="mt-6"></ul>
       </div>
       <div id="map"></div>
-      <div class="absolute bottom-0 left-0 bg-white px-1 pt-1 text-sm">Data sources: OSM, Wikidata | subinsb.com/kpna</div>
+      <div id="credits" class="absolute bottom-0 left-0 bg-white px-1 pt-1 text-sm">Data sources: OSM, Wikidata | <a class="text-cyan-800">subinsb.com/kpna</a></div>
     </div>
 
     <style>
       @import url('https://smc.org.in/fonts/manjari.css');        
       html { font-family: 'Manjari', sans-serif; }
       body { background-color: #ddd;}
-      #container { height: 700px; width: 700px; border: 1px solid #000; z-index: 99999999; margin: 10px; }
+      #container { height: 700px; width: 700px; border: 1px solid #000; margin: 10px; }
       #map { height: 100%; width: auto; margin-left: 80px; }
-      #title { position: absolute; top: 100px; left: 30px; width: 200px; z-index: 999999; }
+      #title { position: absolute; top: 100px; left: 30px; width: 200px; }
+      #container, #title, #credits { z-index: 9999999; }
+
+      /* #title { display: none; }
+      #map { margin-left: 0px; } */
     </style>
 
-    <!-- <script src="boundary-canvas.js"></script> -->
+    <script src="boundary-canvas.js"></script>
 
     <script>
       let map;
@@ -52,15 +57,15 @@
       fetch("kerala.geojson")
         .then(response => response.json())
         .then(json => {
-          map = L.map('map', {zoomSnap: 0.1}).setView([10.8505, 76.2711], 10);
+          map = L.map('map', {zoomSnap: 0.1, zoomControl: false}).setView([10.8505, 76.2711], 10);
           
           // To show the map background:
-          // var osm = new L.TileLayer.BoundaryCanvas("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          //   maxZoom: 19,
-          //   boundary: json,
-          //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap/Wikidata Contributors</a>'
-          // });
-          // map.addLayer(osm)
+          var osm = new L.TileLayer.BoundaryCanvas("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            boundary: json,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap/Wikidata Contributors</a>'
+          });
+          map.addLayer(osm)
 
           const layer = L.geoJSON(json, {
             style: function(feature) {
@@ -85,10 +90,17 @@
         const drawPoints = () => {
           fetch("data.json")
             .then(response => response.json())
-            .then(data => data.forEach((item) => {
+            .then(data => data.forEach((item, index) => {
+              if (index < 5) {
+                const li = document.createElement("li")
+                li.innerText = item[0]
+                document.getElementById("example").appendChild(li)
+              }
               marker = L.circle([item[1], item[2]], {weight: 1, color: "red", fillColor: "red", radius: 10, fillOpacity: 1}).addTo(map)
               // marker = L.circle([item[1], item[2]], {weight: 6, color: "red", fillColor: "red", radius: 1000, fillOpacity: 1}).addTo(map)
+
               marker.bindPopup(item[0], {autoClose: true});
+              // marker.bindPopup(item[0], {autoClose: false}).openPopup();
             }))
         }
     </script>
