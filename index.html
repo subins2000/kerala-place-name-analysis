@@ -1,5 +1,6 @@
 <html>
   <body>
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""/>
@@ -7,13 +8,26 @@
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-    <div id="map"></div>
+    <div id="container" class="relative">
+      <div id="title">
+        <h1 class="text-2xl pt-4">Places ending with word</h1>
+        <div class="border border-black px-4 py-2 my-4 text-2xl">"ശ്ശേരി"</div>
+        <h2 class="text-2xl">എന്ന വാക്കിൽ അവസാനിക്കുന്ന സ്ഥലങ്ങൾ</h2>
+      </div>
+      <div id="map"></div>
+      <div class="absolute bottom-0 left-0 bg-white px-1 pt-1 text-sm">Data sources: OSM, Wikidata | subinsb.com/kpna</div>
+    </div>
 
     <style>
-      #map { height: 700px; width: 1000px; }
+      @import url('https://smc.org.in/fonts/manjari.css');        
+      html { font-family: 'Manjari', sans-serif; }
+      body { background-color: #ddd;}
+      #container { height: 700px; width: 700px; border: 1px solid #000; z-index: 99999999; margin: 10px; }
+      #map { height: 100%; width: auto; margin-left: 80px; }
+      #title { position: absolute; top: 100px; left: 30px; width: 200px; z-index: 999999; }
     </style>
 
-    <script src="boundary-canvas.js"></script>
+    <!-- <script src="boundary-canvas.js"></script> -->
 
     <script>
       let map;
@@ -40,12 +54,13 @@
         .then(json => {
           map = L.map('map', {zoomSnap: 0.1}).setView([10.8505, 76.2711], 10);
           
-          var osm = new L.TileLayer.BoundaryCanvas("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            maxZoom: 19,
-            boundary: json,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap/Wikidata Contributors</a>'
-          });
-          map.addLayer(osm)
+          // To show the map background:
+          // var osm = new L.TileLayer.BoundaryCanvas("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          //   maxZoom: 19,
+          //   boundary: json,
+          //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap/Wikidata Contributors</a>'
+          // });
+          // map.addLayer(osm)
 
           const layer = L.geoJSON(json, {
             style: function(feature) {
@@ -73,9 +88,10 @@
             .then(data => data.forEach((item) => {
               marker = L.circle([item[1], item[2]], {weight: 1, color: "red", fillColor: "red", radius: 10, fillOpacity: 1}).addTo(map)
               // marker = L.circle([item[1], item[2]], {weight: 6, color: "red", fillColor: "red", radius: 1000, fillOpacity: 1}).addTo(map)
-              marker.bindPopup(item[0], {autoClose: false}).openPopup();
+              marker.bindPopup(item[0], {autoClose: true});
             }))
         }
     </script>
+    <script src=https://cdn.tailwindcss.com></script>
   </body>
 </html> 
