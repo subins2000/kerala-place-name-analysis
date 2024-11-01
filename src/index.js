@@ -3,7 +3,6 @@ import initSqlJs from "sql.js";
 import sqlWasm from "sql.js/dist/sql-wasm.wasm?url";
 import dbFile from "../db.sqlite3?url";
 
-import "./boundary-canvas.js"
 import "./map.js"
 
 const log = msg => document.getElementById("log").innerText += msg

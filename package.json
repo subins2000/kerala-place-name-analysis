@@ -5,6 +5,8 @@
     "dev": "vite"
   },
   "dependencies": {
+    "@types/leaflet": "^1.9.3",
+    "leaflet": "^1.9.4",
     "sql.js": "^1.12.0"
   },
   "devDependencies": {

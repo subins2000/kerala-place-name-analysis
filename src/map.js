@@ -1,3 +1,8 @@
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+// import "./boundary-canvas.js"
+
 let map;
 
 const colors = {
