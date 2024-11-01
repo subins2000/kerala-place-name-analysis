@@ -8,8 +8,8 @@ import "./map.js"
 
 const log = msg => document.getElementById("log").innerText += msg
 
+let db;
 const init = async () => {
-  let db;
   try {
     const SQL = await initSqlJs({ locateFile: () => sqlWasm });
     const file = await fetch(dbFile)
