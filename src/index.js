@@ -8,15 +8,17 @@ import "./map.js"
 
 const log = msg => document.getElementById("log").innerText += msg
 
-let db;
-try {
-  const SQL = await initSqlJs({ locateFile: () => sqlWasm });
-  const file = await fetch(dbFile)
-  const buffer = await file.arrayBuffer()
-  const dbData = new Uint8Array(buffer)
-  db = new SQL.Database(dbData);
-} catch (err) {
-  log(err);
+const init = async () => {
+  let db;
+  try {
+    const SQL = await initSqlJs({ locateFile: () => sqlWasm });
+    const file = await fetch(dbFile)
+    const buffer = await file.arrayBuffer()
+    const dbData = new Uint8Array(buffer)
+    db = new SQL.Database(dbData);
+  } catch (err) {
+    log(err);
+  }
 }
 
 const runQuery = () => {
@@ -46,3 +48,5 @@ document.getElementById("simpleForm").addEventListener("submit", e => {
   document.getElementById("query").value = `SELECT * FROM places WHERE name LIKE '%${value}'`
   runQuery()
 })
+
+init()

@@ -1,5 +1,8 @@
 {
   "name": "kpna",
+  "scripts": {
+    "build": "vite build"
+  },
   "dependencies": {
     "sql.js": "^1.12.0"
   },
