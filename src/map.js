@@ -1,6 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
+import keralaGeoJsonUrl from "../kerala.geojson?url"
 // import "./boundary-canvas.js"
 
 let map;
@@ -22,7 +23,7 @@ const colors = {
   "Thiruvananthapuram": "#abefff"
 }
 
-fetch("kerala.geojson")
+fetch(keralaGeoJsonUrl)
   .then(response => response.json())
   .then(json => {
     map = L.map('map', {zoomSnap: 0.1, zoomControl: true}).setView([10.8505, 76.2711], 10);
