@@ -6,7 +6,7 @@ import dbFile from "../db.sqlite3?url";
 import "./map.js"
 
 const log = msg => document.getElementById("log").innerText += msg
-const clearLog = => document.getElementById("log").innerText = ""
+const clearLog = () => document.getElementById("log").innerText = ""
 
 let db;
 const init = async () => {
